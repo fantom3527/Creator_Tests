@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:viewModels="clr-namespace:CreatorTests.ViewModels"
+      xmlns:models="clr-namespace:CreatorTests.Models"
       xmlns:local="clr-namespace:CreatorTests.Views"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
@@ -31,7 +32,7 @@
     <Grid>
         <StackPanel>
             <TextBlock Text="Банк контрольных заданий для проверки остаточных знаний и уровня сформированности компетенций" TextWrapping="Wrap" Margin="10"  FontWeight="Bold" HorizontalAlignment="Center"/>
-            <ComboBox HorizontalAlignment="Stretch" SelectedItem="{Binding SelectedQuestionAnalysis}"/>
+            <ComboBox HorizontalAlignment="Stretch" SelectedItem="{Binding SelectedСompetenceAchievementIndicator}" ItemsSource="{Binding Source={x:Static models:AppConstants.СompetenceAchievementIndicatorList}}"/>
             <Label Content="Вопрос:" />
             <TextBox HorizontalAlignment="Stretch" Text="{Binding QuestionName}"/>
 

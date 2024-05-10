@@ -10,22 +10,25 @@ public partial class DisciplineInformationVM : ObservableObject
     //private readonly IDocumentService _documentService;
     private SectionDisciplineInformation _sectionDisciplineInformation;
 
-    public string SelectedDirectionName { get; set; }
-    public string SelectedGroupNumber { get; set; }
-    public string SelectedDisciplineName { get; set; }
-    public string SelectedCompetencies { get; set; }
-    public string IndicatorsСompetenceAchievement { get; set; }
+    [ObservableProperty]
+    string? selectedDirectionName;
+
+    [ObservableProperty]
+    string? selectedGroupNumber;
+
+    [ObservableProperty]
+    string? selectedDisciplineName;
+
+    [ObservableProperty]
+    string? selectedCompetencies;
+
+    [ObservableProperty]
+    string? indicatorsСompetenceAchievement;
 
     public static Action<SectionDisciplineInformation> PushApprovalSheetPageHandle { get; set; }
 
-    public DisciplineInformationVM()
-    {
-        //TODO: Удалить
-        //_documentService = new DocumentPDFService();
-    }
-
     [RelayCommand]
-    private void WriteInDocument()
+    private void PushNextPage()
     {
         _sectionDisciplineInformation = new SectionDisciplineInformation()
         {
@@ -37,6 +40,5 @@ public partial class DisciplineInformationVM : ObservableObject
         };
 
         PushApprovalSheetPageHandle(_sectionDisciplineInformation);
-        //_documentService.Save();
     }
 }

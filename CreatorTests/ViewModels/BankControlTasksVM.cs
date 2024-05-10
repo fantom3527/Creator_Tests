@@ -3,7 +3,7 @@
 internal class BankControlTasksVM : BaseViewModel
 {
     public string QuestionName { get; set; }
-    public string SelectedQuestionAnalysis { get; set; }
+    public string SelectedСompetenceAchievementIndicator { get; set; }
     public string FirstAnswerName { get; set; }
     public string SecondAnswerName { get; set; }
     public string ThirdAnswerName { get; set; }

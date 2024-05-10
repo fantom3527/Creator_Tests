@@ -13,15 +13,15 @@
         <viewModels:MainWindowVM />
     </Window.DataContext>
 
-    <Grid DataContext="viewModels:MainWindowVM">
+    <Grid>
         <TabControl>
             <TabItem Header="Информация о дисциплине" IsSelected="True">
                 <Frame Source="DisciplineInformationPage.xaml"/>
             </TabItem>
-            <TabItem Header="Лист согласования" IsEnabled="{Binding IsEnabledApprovalSheetPage}">
+            <TabItem Header="Лист согласования" IsEnabled="{Binding IsEnabledApprovalSheetPage}" IsSelected="{Binding IsSelectedApprovalSheetPage}">
                 <Frame Source="ApprovalSheetPage.xaml"/>
             </TabItem>
-            <TabItem Header="Банк контрольных заданий" IsEnabled="{Binding IsEnabledBankControlTasksPage}">
+            <TabItem Header="Банк контрольных заданий" IsEnabled="{Binding IsEnabledBankControlTasksPage}" IsSelected="{Binding IsSelectedBankControlTasksPage}">
                 <Frame Source="BankControlTasksPage.xaml"/>
             </TabItem>
         </TabControl>

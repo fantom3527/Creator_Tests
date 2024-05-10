@@ -8,10 +8,8 @@ namespace CreatorTests.Views;
 /// </summary>
 public partial class MainWindow : Window
 {
-    public MainWindow(MainWindowVM mainWindowVM)
+    public MainWindow()
     {
         InitializeComponent();
-
-        DataContext = mainWindowVM;
     }
 }

@@ -9,21 +9,38 @@ public partial class MainWindowVM : ObservableObject
     private Document document;
 
     [ObservableProperty]
-    bool isEnabledApprovalSheetPage = false;
+    bool isEnabledApprovalSheetPage;
 
     [ObservableProperty]
-    bool isEnabledBankControlTasksPage = false;
+    bool isEnabledBankControlTasksPage;
+
+    [ObservableProperty]
+    bool isSelectedApprovalSheetPage;
+    
+    [ObservableProperty]
+    bool isSelectedBankControlTasksPage;
 
     public MainWindowVM()
     {
-
-        //disciplineInformationVM.PushApprovalSheetPageHandle += PushApprovalSheetPage;
         DisciplineInformationVM.PushApprovalSheetPageHandle += PushApprovalSheetPage;
+        ApprovalSheetVM.PushBankControlTasksPageHandle += PushBankControlTasksPage;
+        document = new Document();
     }
 
     public void PushApprovalSheetPage(SectionDisciplineInformation sectionDisciplineInformation)
     {
-        isEnabledApprovalSheetPage = true;
+        //isEnabledApprovalSheetPage = true;
+        //OnPropertyChanged(nameof(isEnabledApprovalSheetPage));
+
+        IsEnabledApprovalSheetPage = true;
+        IsSelectedApprovalSheetPage = true;
         document.SectionDisciplineInformation = sectionDisciplineInformation;
+    }
+
+    private void PushBankControlTasksPage(SectionApprovalSheet sectionApprovalSheet)
+    {
+        IsEnabledBankControlTasksPage = true;
+        IsSelectedBankControlTasksPage = true;
+        document.SectionApprovalSheet = sectionApprovalSheet;
     }
 }

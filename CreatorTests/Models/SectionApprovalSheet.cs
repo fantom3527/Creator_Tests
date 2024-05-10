@@ -4,7 +4,7 @@ internal class SectionApprovalSheet
 {
     public string DepartmentName { get; set; }
     public string ProtocolNumber { get; set; }
-    public int ApprovalYear { get; set; }
+    public string ApprovalYear { get; set; }
     public string FirstPositionName { get; set; }
     public string SecondPositionName { get; set; }
     public string FirstLastNameInitials { get; set; }
