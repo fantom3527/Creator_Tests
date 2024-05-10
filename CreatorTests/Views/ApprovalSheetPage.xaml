@@ -1,0 +1,98 @@
+﻿<Page x:Class="CreatorTests.Views.ApprovalSheetPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:viewModels="clr-namespace:CreatorTests.ViewModels"
+      xmlns:local="clr-namespace:CreatorTests.Views"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="ApprovalSheetPage">
+
+    <Page.DataContext>
+        <viewModels:ApprovalSheetVM />
+    </Page.DataContext>
+
+    <Page.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="6" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="6" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style TargetType="Label">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Content="Лист согласования" FontWeight="Bold"/>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" >
+            <TextBlock Text="Рассмотрен и одобрен на заседании кафедры" />
+            <TextBox Width="100" Text="{Binding DepartmentName}"/>
+            <TextBlock Text="Протокол №"/>
+            <TextBox Width="80" Text="{Binding ProtocolNumber}"/>
+            <TextBlock Text="от"/>
+            <TextBox Width="120" Text="{Binding ApprovalYear}"/>
+            <TextBlock Text="г."/>
+        </StackPanel>
+
+
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="СОГЛАСОВАНО:" Grid.Row="0"/>
+
+            <StackPanel Grid.Column="0" Grid.Row="1">
+                <Label Content="Должность" />
+                <TextBox Text="{Binding FirstPositionName}"/>
+                <TextBox Text="{Binding SecondPositionName}"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Grid.Row="1">
+                <Label Content="Инициалы, фамилия" />
+                <TextBox Text="{Binding FirstLastNameInitials}"/>
+                <TextBox Text="{Binding SecondLastNameInitials}"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" Grid.Row="1">
+                <Label Content="Подпись" />
+                <TextBox Text="{Binding FirstSignature}"/>
+                <TextBox Text="{Binding SecondSignature}"/>
+            </StackPanel>
+
+            <TextBlock Text="РАЗРАБОТАНО:" Grid.Row="2" />
+
+            <TextBox Grid.Column="0" Grid.Row="3" Text="{Binding DevelopedPositionName}"/>
+            <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding DevelopedLastNameInitials}"/>
+            <TextBox Grid.Column="2" Grid.Row="3" Text="{Binding DevelopedSignature}"/>
+        </Grid>
+
+        <Button Grid.Row="3" Content="Продолжить заполнение" VerticalAlignment="Bottom"/>
+    </Grid>
+</Page>
