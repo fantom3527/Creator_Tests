@@ -1,9 +1,8 @@
 ﻿namespace CreatorTests.Models;
 
-internal class SectionBankControlTasks
+public class Question
 {
-    public string QuestionName { get; set; }
-    public string SelectedQuestionAnalysis { get; set; }
+    public string Name { get; set; }
     public string FirstAnswerName { get; set; }
     public string SecondAnswerName { get; set; }
     public string ThirdAnswerName { get; set; }

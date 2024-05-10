@@ -1,6 +1,8 @@
-﻿namespace CreatorTests.Services.Interfaces;
+﻿using CreatorTests.Models.Documents;
 
-internal interface IDocumentService
+namespace CreatorTests.Services.Interfaces;
+
+public interface IDocumentService
 {
-    public Task Save();
+    public void Save(DocumentAssessmentDiscipline document);
 }

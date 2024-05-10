@@ -1,13 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CreatorTests.Models;
+using CreatorTests.Models.Documents;
 
 namespace CreatorTests.ViewModels;
 
 public partial class DisciplineInformationVM : ObservableObject
 {
-    //TODO: Удалить
-    //private readonly IDocumentService _documentService;
     private SectionDisciplineInformation _sectionDisciplineInformation;
 
     [ObservableProperty]
@@ -25,7 +23,7 @@ public partial class DisciplineInformationVM : ObservableObject
     [ObservableProperty]
     string? indicatorsСompetenceAchievement;
 
-    public static Action<SectionDisciplineInformation> PushApprovalSheetPageHandle { get; set; }
+    public static Action<SectionDisciplineInformation> PushApprovalSheetPageHandler { get; set; }
 
     [RelayCommand]
     private void PushNextPage()
@@ -39,6 +37,6 @@ public partial class DisciplineInformationVM : ObservableObject
             IndicatorsСompetenceAchievement = IndicatorsСompetenceAchievement
         };
 
-        PushApprovalSheetPageHandle(_sectionDisciplineInformation);
+        PushApprovalSheetPageHandler(_sectionDisciplineInformation);
     }
 }

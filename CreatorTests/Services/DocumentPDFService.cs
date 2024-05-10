@@ -1,126 +1,176 @@
-﻿using CreatorTests.Services.Interfaces;
-using iText.Kernel.Pdf;
-using System;
-using System.IO;
+﻿using CreatorTests.Models.Documents;
+using CreatorTests.Services.Interfaces;
+using iText.IO.Font;
+using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using Microsoft.Win32;
-using iText.Kernel.Colors;
-using iText.Kernel.Font;
-using iText.IO.Font;
+using System.IO;
 
-namespace CreatorTests.Services
+namespace CreatorTests.Services;
+
+internal class DocumentPDFService : IDocumentService
 {
-    internal class DocumentPDFService : IDocumentService
+    private DocumentAssessmentDiscipline _documentAssessmentDiscipline;
+
+    public void Save(DocumentAssessmentDiscipline saveDocument)
     {
-        public async Task Save()
+        _documentAssessmentDiscipline = saveDocument;
+
+        try
         {
-            string dest = GetChoosePath();//"DisciplineInformation.pdf";
-            try
-            {
-                var font = PdfFontFactory.CreateFont(
-                            Path.Combine(/*Directory.GetCurrentDirectory(), "Fonts", "FreeSans", "freesans.ttf"*//*AppDomain.CurrentDomain.BaseDirectory,*//* "freesans.ttf"*/
-                                //TODO: Поменять
-                                @"D:\MyUsers\MyDesctop\GitHub\Programming\My\CreatorTests\Fonts\FreeSans\freesans.ttf"), //Fonts\\FreeSans\\
-                            PdfEncodings.IDENTITY_H); // Кодировка русского текста
+            var document = GetDocument();
+            if(document == null)
+                return;
+            
+            WriteSectionDisciplineInformation(document);
+            WriteSectionApprovalSheet(document);
+            WriteSectionBankControlTasks(document);
 
-                // Создание PDF документа
-                PdfWriter writer = new PdfWriter(dest);
-                PdfDocument pdf = new PdfDocument(writer);
-                pdf.AddFont(font);
-
-                Document document = new Document(pdf);
-                document.SetFont(font);
-
-                // Добавление текста в центр документа
-                Paragraph title = new Paragraph("Информация о дисциплине").SetTextAlignment(TextAlignment.CENTER).SetFontSize(14).SetBold();
-                //Paragraph title = new Paragraph("Information").SetTextAlignment(TextAlignment.CENTER).SetFontSize(30);
-
-                document.Add(title);
-
-
-                Table table = CreateTable();
-
-                // Добавление таблицы в документ
-                document.Add(table);
-
-                document.Add(new Paragraph("Лист согласования").SetTextAlignment(TextAlignment.CENTER).SetFontSize(14));
-                document.Add(new Paragraph($"Рассмотрен и одобрен на заседании кафедры {"Test"} протокол № {"Test"} от \"{ "Test" }\"").SetTextAlignment(TextAlignment.CENTER).SetFontSize(14));
-
-                document.Add(new Paragraph("СОГЛАСОВАНО:").SetBold());
-
-                // Создание параграфа и добавление текста с явными отступами
-                Paragraph paragraph = new Paragraph()
-                    .SetTextAlignment(TextAlignment.CENTER);  // Выравнивание текста по центру
-
-                // Добавление текста с явными отступами
-                paragraph.Add(new Paragraph("Должность").SetMarginRight(50));  // Установка отступа справа для "Должность"
-                paragraph.Add(new Paragraph("Инициалы, фамилия").SetMarginLeft(50).SetMarginRight(50));  // Установка отступов слева и справа для "Инициалы, фамилия"
-                paragraph.Add(new Paragraph("Подпись").SetMarginLeft(50));  // Установка отступа слева для "Подпись"
-
-                // Добавление параграфа в документ
-                document.Add(paragraph);
-
-                document.Add(new Paragraph("РАЗРАБОТАНО:").SetBold());
-
-                document.Add(new Paragraph("Банк контрольных заданий для проверки остаточных знаний и уровня сформированности компетенций:").SetTextAlignment(TextAlignment.CENTER).SetBold());
-
-                // Закрытие документа
-                document.Close();
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
+            document.Close();
         }
-
-        private Table CreateTable()
+        catch (Exception ex)
         {
-            // Создание и заполнение таблицы
-            Table table = new Table(new float[] { 30, 1000 })
-                  .UseAllAvailableWidth()
-                  .SetHorizontalAlignment(HorizontalAlignment.CENTER)
-                  .SetFontSize(14);
-                  /*SetFont(font)*/
-
-
-            //// Добавление заголовков столбцов
-            //table.AddHeaderCell("Левый столбец");
-            //table.AddHeaderCell("Правый столбец");
-
-            // Добавление данных в таблицу
-            //table.AddCell("Направление");
-            table.AddCell(new Cell().Add(new Paragraph("Направление").SetHorizontalAlignment(HorizontalAlignment.CENTER)))
-                 /*.AddCell(new Cell().Add(new Paragraph("Номер группы")))*/;
-            //table.AddCell("");
-            table.AddCell("");
-
-            table.AddCell(new Cell().Add(new Paragraph("Номер группы")).SetHorizontalAlignment(HorizontalAlignment.CENTER));
-            table.AddCell("");
-
-            table.AddCell("Дисциплина").SetHorizontalAlignment(HorizontalAlignment.CENTER);
-            table.AddCell("");
-
-            table.AddCell("Компетенции").SetHorizontalAlignment(HorizontalAlignment.CENTER);
-            table.AddCell("");
-
-            table.AddCell("Индикаторы достижения компетенции").SetHorizontalAlignment(HorizontalAlignment.CENTER);
-            table.AddCell("");
-
-            return table;
+            throw;
         }
+    }
 
-        private string GetChoosePath()
+    private Document GetDocument()
+    {
+        string dest = GetChoosePath();
+        if (dest == null || dest == string.Empty)
+            return null;
+
+        var font = PdfFontFactory.CreateFont(
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "freesans.ttf"),
+                PdfEncodings.IDENTITY_H);
+
+        // Создание PDF документа
+        PdfWriter writer = new PdfWriter(dest);
+        PdfDocument pdf = new PdfDocument(writer);
+        pdf.AddFont(font);
+
+        Document document = new Document(pdf);
+        document.SetFont(font);
+
+        return document;
+    }
+
+    private void WriteSectionDisciplineInformation(Document document)
+    {
+        Paragraph title = new Paragraph("Информация о дисциплине").SetTextAlignment(TextAlignment.CENTER).SetFontSize(14).SetBold();
+        document.Add(title);
+
+        Table table = WriteTable();
+        document.Add(table);
+    }
+
+    private void WriteSectionApprovalSheet(Document document)
+    {
+        document.Add(new Paragraph("Лист согласования").SetTextAlignment(TextAlignment.CENTER).SetFontSize(14));
+        document.Add(new Paragraph($"Рассмотрен и одобрен на заседании кафедры {_documentAssessmentDiscipline.SectionApprovalSheet.DepartmentName ?? string.Empty}" +
+            $" протокол № {_documentAssessmentDiscipline.SectionApprovalSheet.ProtocolNumber ?? string.Empty} от \"{_documentAssessmentDiscipline.SectionApprovalSheet.ApprovalYear ?? string.Empty}\"").SetTextAlignment(TextAlignment.CENTER).SetFontSize(14));
+
+        document.Add(new Paragraph("СОГЛАСОВАНО:").SetBold());
+
+        Paragraph firstParagraph = new Paragraph()
+            .SetTextAlignment(TextAlignment.CENTER);
+
+        firstParagraph.Add(new Paragraph("Должность").SetMarginRight(50));
+        firstParagraph.Add(new Paragraph("Инициалы, фамилия").SetMarginLeft(50).SetMarginRight(50));
+        firstParagraph.Add(new Paragraph("Подпись").SetMarginLeft(50));
+        document.Add(firstParagraph);
+
+        Paragraph secondParagraph = new Paragraph()
+            .SetTextAlignment(TextAlignment.CENTER);
+
+        secondParagraph.Add(new Paragraph(_documentAssessmentDiscipline.SectionApprovalSheet.FirstPositionName ?? string.Empty).SetMarginRight(50));
+        secondParagraph.Add(new Paragraph(_documentAssessmentDiscipline.SectionApprovalSheet.FirstLastNameInitials ?? string.Empty).SetMarginLeft(50).SetMarginRight(50));
+        secondParagraph.Add(new Paragraph(_documentAssessmentDiscipline.SectionApprovalSheet.FirstSignature ?? string.Empty).SetMarginLeft(50));
+        document.Add(secondParagraph);
+
+        Paragraph thirdParagraph = new Paragraph()
+            .SetTextAlignment(TextAlignment.CENTER);
+
+        thirdParagraph.Add(new Paragraph(_documentAssessmentDiscipline.SectionApprovalSheet.SecondPositionName ?? string.Empty).SetMarginRight(50));
+        thirdParagraph.Add(new Paragraph(_documentAssessmentDiscipline.SectionApprovalSheet.SecondLastNameInitials ?? string.Empty).SetMarginLeft(50).SetMarginRight(50));
+        thirdParagraph.Add(new Paragraph(_documentAssessmentDiscipline.SectionApprovalSheet.SecondSignature ?? string.Empty).SetMarginLeft(50));
+        document.Add(thirdParagraph);
+
+        document.Add(new Paragraph("РАЗРАБОТАНО:").SetBold());
+
+        Paragraph fourthParagraph = new Paragraph()
+            .SetTextAlignment(TextAlignment.CENTER);
+
+        fourthParagraph.Add(new Paragraph(_documentAssessmentDiscipline.SectionApprovalSheet.DevelopedPositionName ?? string.Empty).SetMarginRight(50));
+        fourthParagraph.Add(new Paragraph(_documentAssessmentDiscipline.SectionApprovalSheet.DevelopedLastNameInitials ?? string.Empty).SetMarginLeft(50).SetMarginRight(50));
+        fourthParagraph.Add(new Paragraph(_documentAssessmentDiscipline.SectionApprovalSheet.DevelopedSignature ?? string.Empty).SetMarginLeft(50));
+        document.Add(fourthParagraph);
+    }
+
+    private void WriteSectionBankControlTasks(Document document)
+    {
+        document.Add(new AreaBreak());
+        document.Add(new Paragraph("Банк контрольных заданий для проверки остаточных знаний и уровня сформированности компетенций:").SetTextAlignment(TextAlignment.CENTER).SetBold());
+
+        WriteQuestions(document);
+    }
+
+    private Table WriteTable()
+    {
+        Table table = new Table(new float[] { 30, 1000 })
+              .UseAllAvailableWidth()
+              .SetHorizontalAlignment(HorizontalAlignment.CENTER)
+              .SetFontSize(14);
+
+        table.AddCell(new Cell().Add(new Paragraph("Направление").SetHorizontalAlignment(HorizontalAlignment.CENTER)));
+        table.AddCell(_documentAssessmentDiscipline.SectionDisciplineInformation.DirectionName ?? string.Empty).SetHorizontalAlignment(HorizontalAlignment.LEFT);
+
+        table.AddCell(new Paragraph("Номер группы").SetHorizontalAlignment(HorizontalAlignment.CENTER));
+        table.AddCell(_documentAssessmentDiscipline.SectionDisciplineInformation.GroupNumber ?? string.Empty);
+
+        table.AddCell("Дисциплина").SetHorizontalAlignment(HorizontalAlignment.CENTER);
+        table.AddCell(_documentAssessmentDiscipline.SectionDisciplineInformation.DisciplineName ?? string.Empty);
+
+        table.AddCell("Компетенции").SetHorizontalAlignment(HorizontalAlignment.CENTER);
+        table.AddCell(_documentAssessmentDiscipline.SectionDisciplineInformation.Competencies ?? string.Empty);
+
+        table.AddCell("Индикаторы достижения компетенции").SetHorizontalAlignment(HorizontalAlignment.CENTER);
+        table.AddCell(_documentAssessmentDiscipline.SectionDisciplineInformation.IndicatorsСompetenceAchievement ?? string.Empty);
+
+        return table;
+    }
+
+    private string GetChoosePath()
+    {
+        SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+        saveFileDialog1.Filter = "PDF files|*.pdf|All files|*.*";
+        saveFileDialog1.Title = "Save PDF File";
+        saveFileDialog1.ShowDialog();
+
+        return saveFileDialog1.FileName;
+    }
+
+    private void WriteQuestions(Document document)
+    {
+        int i = 0;
+        foreach(var qustion in _documentAssessmentDiscipline.SectionBankControlTasks.QuestionList)
         {
-            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.Filter = "PDF files|*.pdf|All files|*.*";
-            saveFileDialog1.Title = "Save PDF File";
-            saveFileDialog1.ShowDialog();
+            document.Add(new Paragraph($"{++i} {qustion.Name ?? string.Empty}").SetHorizontalAlignment(HorizontalAlignment.CENTER));
 
-            return saveFileDialog1.FileName;
+            // Создание списка с нумерацией точками
+            List list = new List()
+                .SetSymbolIndent(12) // Отступ перед точкой
+                .SetListSymbol("\u2022"); // Этот символ представляет точку
+
+            list.Add(new ListItem(qustion.FirstAnswerName ?? string.Empty));
+            list.Add(new ListItem(qustion.SecondAnswerName ?? string.Empty));
+            list.Add(new ListItem(qustion.ThirdAnswerName ?? string.Empty));
+            list.Add(new ListItem(qustion.FourthAnswerName ?? string.Empty));
+
+            document.Add(list);
         }
     }
 }

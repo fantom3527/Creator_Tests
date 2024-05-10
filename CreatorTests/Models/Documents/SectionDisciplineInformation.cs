@@ -1,4 +1,4 @@
-﻿namespace CreatorTests.Models;
+﻿namespace CreatorTests.Models.Documents;
 
 public class SectionDisciplineInformation
 {

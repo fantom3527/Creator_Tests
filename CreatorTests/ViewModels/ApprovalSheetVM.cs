@@ -1,38 +1,50 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CreatorTests.Models;
+using CreatorTests.Models.Documents;
 
 namespace CreatorTests.ViewModels;
 
 internal partial class ApprovalSheetVM : ObservableObject
 {
     private SectionApprovalSheet _sectionApprovalSheet;
+
     [ObservableProperty]
     string departmentName;
+
     [ObservableProperty]
     string protocolNumber;
+
     [ObservableProperty]
     string approvalYear;
+
     [ObservableProperty]
     string firstPositionName;
+
     [ObservableProperty]
     string secondPositionName;
+
     [ObservableProperty]
     string firstLastNameInitials;
+
     [ObservableProperty]
     string secondLastNameInitials;
+
     [ObservableProperty]
     string firstSignature;
+
     [ObservableProperty]
     string secondSignature;
+
     [ObservableProperty]
     string developedPositionName;
+
     [ObservableProperty]
     string developedLastNameInitials;
+
     [ObservableProperty]
     string developedSignature;
 
-    public static Action<SectionApprovalSheet> PushBankControlTasksPageHandle { get; set; }
+    public static Action<SectionApprovalSheet> PushBankControlTasksPageHandler { get; set; }
 
 
     [RelayCommand]
@@ -54,6 +66,6 @@ internal partial class ApprovalSheetVM : ObservableObject
             DevelopedSignature = DevelopedSignature
         };
 
-        PushBankControlTasksPageHandle(_sectionApprovalSheet);
+        PushBankControlTasksPageHandler(_sectionApprovalSheet);
     }
 }

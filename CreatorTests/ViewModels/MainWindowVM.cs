@@ -1,12 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CreatorTests.Models;
-using Microsoft.Extensions.Hosting;
+using CreatorTests.Models.Documents;
+using CreatorTests.Services.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CreatorTests.ViewModels;
 
 public partial class MainWindowVM : ObservableObject
 {
-    private Document document;
+    private DocumentAssessmentDiscipline documentAssessmentDiscipline;
+    private readonly IDocumentService _documentService;
 
     [ObservableProperty]
     bool isEnabledApprovalSheetPage;
@@ -22,25 +24,32 @@ public partial class MainWindowVM : ObservableObject
 
     public MainWindowVM()
     {
-        DisciplineInformationVM.PushApprovalSheetPageHandle += PushApprovalSheetPage;
-        ApprovalSheetVM.PushBankControlTasksPageHandle += PushBankControlTasksPage;
-        document = new Document();
+        DisciplineInformationVM.PushApprovalSheetPageHandler += PushApprovalSheetPage;
+        ApprovalSheetVM.PushBankControlTasksPageHandler += PushBankControlTasksPage;
+        BankControlTasksVM.SaveDocumentToHandler += SaveDocumentTo;
+
+        documentAssessmentDiscipline = new DocumentAssessmentDiscipline();
+        _documentService = App.AppHost.Services.GetRequiredService<IDocumentService>();
     }
 
+    //TODO: Добавить Action для случаев, когда где-то будет очищено поле, тогда вкладку дизейблить
     public void PushApprovalSheetPage(SectionDisciplineInformation sectionDisciplineInformation)
     {
-        //isEnabledApprovalSheetPage = true;
-        //OnPropertyChanged(nameof(isEnabledApprovalSheetPage));
-
         IsEnabledApprovalSheetPage = true;
         IsSelectedApprovalSheetPage = true;
-        document.SectionDisciplineInformation = sectionDisciplineInformation;
+        documentAssessmentDiscipline.SectionDisciplineInformation = sectionDisciplineInformation;
     }
 
     private void PushBankControlTasksPage(SectionApprovalSheet sectionApprovalSheet)
     {
         IsEnabledBankControlTasksPage = true;
         IsSelectedBankControlTasksPage = true;
-        document.SectionApprovalSheet = sectionApprovalSheet;
+        documentAssessmentDiscipline.SectionApprovalSheet = sectionApprovalSheet;
+    }
+
+    private void SaveDocumentTo(SectionBankControlTasks sectionBankControlTasks)
+    {
+        documentAssessmentDiscipline.SectionBankControlTasks = sectionBankControlTasks;
+        _documentService.Save(documentAssessmentDiscipline);
     }
 }

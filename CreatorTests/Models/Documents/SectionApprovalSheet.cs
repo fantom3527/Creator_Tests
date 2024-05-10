@@ -1,6 +1,6 @@
-﻿namespace CreatorTests.Models;
+﻿namespace CreatorTests.Models.Documents;
 
-internal class SectionApprovalSheet
+public class SectionApprovalSheet
 {
     public string DepartmentName { get; set; }
     public string ProtocolNumber { get; set; }

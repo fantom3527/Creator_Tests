@@ -33,6 +33,12 @@
         <StackPanel>
             <TextBlock Text="Банк контрольных заданий для проверки остаточных знаний и уровня сформированности компетенций" TextWrapping="Wrap" Margin="10"  FontWeight="Bold" HorizontalAlignment="Center"/>
             <ComboBox HorizontalAlignment="Stretch" SelectedItem="{Binding SelectedСompetenceAchievementIndicator}" ItemsSource="{Binding Source={x:Static models:AppConstants.СompetenceAchievementIndicatorList}}"/>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Label Content="Количество вопросов:" />
+                <Label Content="{Binding QuestionCount}" />
+            </StackPanel>
+            
             <Label Content="Вопрос:" />
             <TextBox HorizontalAlignment="Stretch" Text="{Binding QuestionName}"/>
 
@@ -69,9 +75,9 @@
             </Grid>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="20">
-                <Button Content="Добавить вопрос" />
-                <Button Content="Очистить" />
-                <Button Content="Сохранить в" />
+                <Button Content="Добавить вопрос" Command="{Binding AddQuestionsCommand}"/>
+                <Button Content="Очистить вопросы" Command="{Binding ClearQuestionsCommand}"/>
+                <Button Content="Сохранить в" Command="{Binding SaveDocumentToCommand}"/>
             </StackPanel>
         </StackPanel>
     </Grid>

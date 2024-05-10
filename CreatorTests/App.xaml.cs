@@ -1,5 +1,6 @@
-﻿using CreatorTests.Views;
-using iText.Layout.Properties;
+﻿using CreatorTests.Services;
+using CreatorTests.Services.Interfaces;
+using CreatorTests.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Windows;
@@ -19,6 +20,7 @@ public partial class App : Application
             .ConfigureServices((host, services) =>
             {
                 services.AddSingleton<MainWindow>();
+                services.AddTransient<IDocumentService, DocumentPDFService>();
             })
             .Build();
     }
@@ -35,7 +37,7 @@ public partial class App : Application
 
     protected override async void OnExit(ExitEventArgs e)
     {
-        await AppHost.StopAsync();
+        await AppHost!.StopAsync();
 
         base.OnExit(e);
     }
